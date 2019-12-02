@@ -17,7 +17,10 @@ package definitions is
 	 constant counter_1_ce  : integer := 1;
 	 constant counter_2_ce  : integer := 2;
 	 constant reset_i       : integer := 3;
-    constant W_CONTROL     : integer := 4;   -- Control vector width
+	 constant load_seq_gen  : integer := 4;
+	 constant shift_in_gen  : integer := 5;
+	 constant gen_sequence  : integer := 6;
+    constant W_CONTROL      : integer := 7;   -- Control vector width
 
     -- Status Constants
     -- COMPLETE...

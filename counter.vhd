@@ -18,7 +18,7 @@ begin
 
 	count <= reg;
 	
-	process(clk)
+	process(clk,reset)
 	  begin
 	  
 		 if(reset='1') then
