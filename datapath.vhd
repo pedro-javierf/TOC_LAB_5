@@ -68,7 +68,9 @@ architecture arch_dp of datapath is
 	
 	signal rst : std_logic;
 	
-	signal seq_gen_value : std_logic_vector(7 downto 0);
+	signal seq_gen_value: std_logic_vector(7 downto 0);
+	signal d:			  std_logic_vector(6 downto 0);
+	signal val1,val2    : std_logic_vector(6 downto 0);
 	
 begin
 
@@ -91,10 +93,10 @@ begin
 	 SEQGEN : seq_generator port map(clk_1,reset,control(load_seq_gen), control(shift_in_gen), seq_gen_value, leds_output);
 		
 	--multiplexed values to dp_display
-	 NUMCON1: conv_7seg port map(count1,open);
-	 NUMCON2: conv_7seg port map(count2,open);
+	 NUMCON1: conv_7seg port map(count1,val1);
+	 NUMCON2: conv_7seg port map(count2,val2);
 		
-	 DISPDRIVER: displays port map(reset, clk, "10",);
+	 DISPDRIVER: displays port map(reset, clk, "10", d, dp_display_enable);
 		
 	 process(count_secs)
 		begin
@@ -110,7 +112,7 @@ begin
 	process(count1,count2)
 		begin
 			-- Comparator
-			if(count1=count2)then --10  IF IT DOESN'T WORK CHECK THIS
+			if(count1=count2)then 
 				status(equals)<='1';
 			else
 				status(equals)<='0';
@@ -118,7 +120,7 @@ begin
 			
 	end process;
 	
-	process(count1,count2)
+	process(control)
 		begin
 			-- Comparator
 			if(control(gen_sequence)='0')then
@@ -128,5 +130,15 @@ begin
 			end if;
 			
 	end process;
+	
+	-- Mostramos solo un digito a la vez
+    process(d)
+    begin
+        if (d = "1111111") then
+            dp_display <= val1;
+        else
+            dp_display <= val2;
+        end if;
+    end process;
 
 end arch_dp;
