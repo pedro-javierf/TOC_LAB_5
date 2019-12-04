@@ -77,26 +77,26 @@ begin
 	rst <= reset OR control(reset_i);
 	
     -- MODULES AND INTERCONNECTIONS --
-	 CLK_DIV: clock_divider port map(reset,clk, clk_1,clk_cnt_1,clk_cnt_2);
+	 CLK_DIV: clock_divider port map(rst,clk, clk_1,clk_cnt_1,clk_cnt_2);
 	 
 	 --10 seconds counter
 	 CNTR_S : counter generic map(n => 4, modulo => 10)
-	 port map(clk_1,reset,control(counter_s_ce), count_secs);
+	 port map(clk_1,rst,control(counter_s_ce), count_secs);
 
 	 --Roulete 1 counter
-	 CNTR_1 : counter port map(clk_cnt_1,reset,control(counter_1_ce), count1);
+	 CNTR_1 : counter port map(clk_cnt_1,rst,control(counter_1_ce), count1); --clk_cnt_1
 
 	 --Roulete 2 counter
-	 CNTR_2 : counter port map(clk_cnt_2,reset,control(counter_2_ce), count2);
+	 CNTR_2 : counter port map(clk_cnt_2,rst,control(counter_2_ce), count2); --clk_cnt_2
 		
 	--Sequence Generator
-	 SEQGEN : seq_generator port map(clk_1,reset,control(load_seq_gen), control(shift_in_gen), seq_gen_value, leds_output);
+	 SEQGEN : seq_generator port map(clk_1,rst,control(load_seq_gen), control(shift_in_gen), seq_gen_value, leds_output);
 		
 	--multiplexed values to dp_display
 	 NUMCON1: conv_7seg port map(count1,val1);
 	 NUMCON2: conv_7seg port map(count2,val2);
 		
-	 DISPDRIVER: displays port map(reset, clk, "10", d, dp_display_enable);
+	 DISPDRIVER: displays port map(rst, clk, "11", d, dp_display_enable);
 		
 	 process(count_secs)
 		begin
@@ -132,7 +132,14 @@ begin
 	end process;
 	
 	-- Mostramos solo un digito a la vez
-    process(d)
+	
+	-- Multiplexors
+		--CASE d IS
+		--WHEN '11111111' => dp_display <= val1;
+        --WHEN OTHERS => dp_display <= vañ2;
+		--END CASE;
+	
+    process(d, val1, val2)
     begin
         if (d = "1111111") then
             dp_display <= val1;

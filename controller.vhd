@@ -27,7 +27,7 @@ begin
 	end process SYNC_STATE;
 
 
-    COMB: process (STATE, status)
+    COMB: process (STATE, status, start, stop)
     begin
         control <= (others => '0');
         done    <= '0';
@@ -64,9 +64,9 @@ begin
 					control(gen_sequence) <= '0'; --load 00000000
 					
 					if(stop='1')then
-						NEXT_STATE <= S_wait_stop;
-					else
 						NEXT_STATE <= S_cmp;
+					else
+						NEXT_STATE <= S_wait_stop;
 					end if;
 				
                 
@@ -87,7 +87,7 @@ begin
 					end if;
 					 
 					 
-            when S_load =>
+            when S_load => --aka load winner
 					--enable sequence generator thing, firstly inputting the "1010101" seuqnece then inverting it
 				
 				    control(load_seq_gen) <= '1'; --activate load

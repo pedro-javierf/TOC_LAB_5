@@ -40,7 +40,7 @@ begin
         end if;
     end process;
 
-    display_enable <= "1100";      
+    display_enable <= "1001";      
     -- PARPADEO - FIN
 
 end Behavioral;

@@ -33,7 +33,7 @@ architecture Behavioural of SlotMachine is
 	
 	component controller
     port( clk, reset : in  std_logic;
-			 start,stop    	: in  std_logic;
+		  start,stop       : in  std_logic;
           status           : in  std_logic_vector(W_STATUS-1  downto 0);
           control          : out std_logic_vector(W_CONTROL-1 downto 0);
           done             : out std_logic );
@@ -48,21 +48,12 @@ architecture Behavioural of SlotMachine is
                xDebFallingEdge : out std_logic;
                xDebRisingEdge  : out std_logic );
     end component debouncer;
-	 
-	
     
-	
-
 	 --Actual bus lines for STATUS and CONTROL signals
     signal status  : std_logic_vector(W_STATUS-1  downto 0);
     signal control : std_logic_vector(W_CONTROL-1 downto 0);
 	 
-	 --signal display : std_logic_vector(6 downto 0);        --mapped to HW pins
-	 --signal display_enable: std_logic_vector(3 downto 0);  --mapped to HW pins
-	 
-	 --signal reset   : std_logic;
-	 
-	 signal btnStart, btnStop : std_logic;
+	signal btnStart, btnStop : std_logic;
 	 
 begin
 
@@ -72,9 +63,12 @@ begin
 	--Controller
 	CU: controller port map(clk, reset, btnStart, btnStop ,status, control, done);
 	
+	btnStart <= start;
+	btnStop <= stop;
+	
 	--Debouncers
-	DB1: debouncer port map(reset, clk, start, btnStart, open, open );
-	DB2: debouncer port map(reset, clk, stop,  btnStop,  open, open );
+	--DB1: debouncer port map(reset, clk, start, open, open, btnStart );
+	--DB2: debouncer port map(reset, clk, stop,  open,  open, btnStop );
 	
 	--CONV: conv_7seg port map();
 
